@@ -8,4 +8,4 @@ RUN ./mvnw clean package -DskipTests
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "target/login-game-project-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "target/loginproject-0.0.1-SNAPSHOT.jar"]
