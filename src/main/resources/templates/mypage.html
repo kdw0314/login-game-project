@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>마이페이지</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Apple SD Gothic Neo', sans-serif;
+            background-color: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background-color: white;
+            padding: 2rem 3rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            width: 400px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        p {
+            margin: 0.5rem 0;
+            color: #555;
+        }
+
+        a.button {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.6rem 1.2rem;
+            background-color: #4f88ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 0.6rem;
+            transition: background-color 0.2s ease;
+        }
+
+        a.button:hover {
+            background-color: #366fe0;
+        }
+
+        .logout {
+            display: block;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2><span th:text="${user.name}">홍길동</span>님, 환영합니다 👋</h2>
+
+    <p><strong>아이디:</strong> <span th:text="${user.username}"></span></p>
+    <p><strong>이메일:</strong> <span th:text="${user.email}"></span></p>
+
+    <a href="/profile-edit" class="button">프로필 수정</a>
+    <a href="/logout" class="logout">로그아웃</a>
+
+</div>
+</body>
+</html>

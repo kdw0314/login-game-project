@@ -1,0 +1,22 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 60m  # 세션 유효시간 60분
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/login_db?serverTimezone=Asia/Seoul
+    username: root
+    password: 9092Vusdlq12@
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  thymeleaf:
+    cache: false

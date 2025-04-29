@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>프로필 수정</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+  <meta http-equiv="Pragma" content="no-cache"/>
+  <meta http-equiv="Expires" content="0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Apple SD Gothic Neo', sans-serif;
+      background-color: #f9f9fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .form-box {
+      background-color: white;
+      padding: 2rem 3rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 1rem;
+      display: block;
+      color: #444;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      background-color: #4f88ff;
+      color: white;
+      border: none;
+      border-radius: 0.6rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #366fe0;
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+<div class="form-box">
+  <h2>프로필 수정</h2>
+  <form action="/profile-edit" method="post">
+    <label>이름</label>
+    <input type="text" name="name" th:value="${user.name}" autocomplete="name" />
+
+    <label>이메일</label>
+    <input type="email" name="email" th:value="${user.email}" autocomplete="email" />
+
+    <label>새 비밀번호</label>
+    <input type="password" name="password" placeholder="비밀번호 변경 시 입력" autocomplete="new-password" />
+
+
+    <button type="submit">수정 완료</button>
+  </form>
+  <a href="/mypage">← 마이페이지로 돌아가기</a>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let isFormDirty = true; // ✅ 항상 경고 띄우게 하려면 true로 고정 (입력과 무관하게)
+
+    // form 제출하면 더 이상 경고 안 뜨게
+    const form = document.querySelector("form");
+    if (form) {
+      form.addEventListener("submit", function () {
+        isFormDirty = false;
+      });
+    }
+
+    // 현재 페이지를 히스토리에 추가
+    history.replaceState(null, "", location.href);
+    history.pushState(null, "", location.href); // 👉 한 단계 더 쌓음
+
+    window.addEventListener("popstate", function () {
+      if (isFormDirty) {
+        const stay = !confirm("⚠️ 변경사항이 저장되지 않을 수 있습니다. 정말로 나가시겠습니까?");
+        if (stay) {
+          // 뒤로가기 무효화
+          history.pushState(null, "", location.href);
+        } else {
+          // 그대로 진행 (한 번만 뒤로감)
+          history.back();
+        }
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>게임 결과</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+  <meta http-equiv="Pragma" content="no-cache"/>
+  <meta http-equiv="Expires" content="0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script>
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+      history.go(1); // 사용자가 뒤로가기 누르면 다시 앞으로 보내버림
+    };
+  </script>
+
+  <style>
+    body {
+        font-family: 'Apple SD Gothic Neo', sans-serif;
+        background-color: #f0f4ff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .result-box {
+        background-color: white;
+        padding: 2rem 3rem;
+        border-radius: 1.5rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        width: 400px;
+        text-align: center;
+    }
+
+    h2 {
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        font-size: 1.1rem;
+        color: #444;
+        margin: 0.5rem 0;
+    }
+
+    a.button {
+        display: inline-block;
+        margin-top: 1.5rem;
+        padding: 0.6rem 1.2rem;
+        background-color: #4f88ff;
+        color: white;
+        text-decoration: none;
+        border-radius: 0.6rem;
+        transition: background-color 0.2s ease;
+    }
+
+    a.button:hover {
+        background-color: #366fe0;
+    }
+  </style>
+</head>
+<body>
+<div class="result-box">
+  <h2 th:text="${result}">결과 메시지</h2>
+
+  <p>당신의 선택: <span th:text="${choice}">✌</span></p>
+  <p>컴퓨터의 선택: <span th:text="${computer}">✊</span></p>
+  <p>📊 오늘의 승률: <span th:text="${winRate} ?: '0.0' + '%'">0%</span></p>
+  <p>🎮 오늘 진행한 게임 수: <span th:text="${todayPlays}">0</span></p>
+  <!-- 버튼 묶음 -->
+  <div style="margin-top: 1.5rem;">
+    <a href="/game" class="button" onclick="return confirm('한 판 더 하시겠습니까?')">다시하기</a>
+    <a href="/leaderboard" class="button" style="margin-left: 0.5rem; background-color: #ccc;">🏆 순위 보기</a>
+
+    <!-- 로그아웃 버튼은 아래에 위치 -->
+    <form method="post" action="/logout"
+          onsubmit="return confirm('정말 로그아웃하시겠습니까?')"
+          style="margin-top: 1rem;">
+      <button type="submit" class="button" style="background-color: #ff6b6b;">🚪 로그아웃</button>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

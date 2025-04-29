@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>로그인</title>
+
+    <!-- ✅ 캐시 방지 메타 태그는 반드시 head 안에 위치해야 함 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Apple SD Gothic Neo', sans-serif;
+            background-color: #f4f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-box {
+            background-color: white;
+            padding: 2rem 3rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            width: 400px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        label {
+            text-align: left;
+            margin-top: 1rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input {
+            padding: 0.7rem;
+            margin-top: 0.3rem;
+            border: 1px solid #ccc;
+            border-radius: 0.5rem;
+            font-size: 16px;
+        }
+
+        button {
+            margin-top: 1.5rem;
+            padding: 0.8rem;
+            background-color: #4f88ff;
+            color: white;
+            border: none;
+            border-radius: 0.6rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #366fe0;
+        }
+
+        .sub-link {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .error-msg {
+            color: #cc0000;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div class="login-box">
+    <h2>로그인</h2>
+
+    <div th:if="${param.error}" class="error-msg">
+        아이디 또는 비밀번호가 올바르지 않습니다.
+    </div>
+
+    <form method="post" action="/login">
+        <label for="username">아이디</label>
+        <input type="text" name="username" id="username" autocomplete="username" required />
+
+        <label for="password">비밀번호</label>
+        <input type="password" name="password" id="password" autocomplete="current-password" required />
+
+        <!-- ✅ 로그인 유지 체크박스 -->
+        <label style="margin-top: 1rem; display: flex; align-items: center;">
+            <input type="checkbox" name="remember-me" style="margin-right: 0.5rem;" />
+            로그인 유지
+        </label>
+
+        <button type="submit">로그인</button>
+    </form>
+
+    <div class="sub-link">
+        아직 회원이 아니신가요? <a href="/signup">회원가입</a>
+    </div>
+</div>
+</body>
+</html>

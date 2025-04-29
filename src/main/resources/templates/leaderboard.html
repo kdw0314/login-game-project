@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>리더보드</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+          font-family: 'Apple SD Gothic Neo', sans-serif;
+          background-color: #f8f9fa;
+          text-align: center;
+          padding: 2rem;
+        }
+        table {
+          margin: 0 auto;
+          border-collapse: collapse;
+          width: 60%;
+        }
+        th, td {
+          padding: 0.8rem;
+          border-bottom: 1px solid #ccc;
+        }
+        th {
+          background-color: #4f88ff;
+          color: white;
+        }
+        h2 {
+          margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+<h2>🏆 승리 리더보드</h2>
+
+<table> <!-- ✅ 테이블 열기 -->
+
+    <thead>
+    <tr>
+        <th>순위</th>
+        <th>아이디</th>
+        <th>승수</th>
+        <th>승률</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="user, stat : ${topUsers}">
+        <td th:text="${stat.count}">1</td>
+        <td th:text="${user.username}">아이디</td>
+        <td th:text="${user.wins}">0</td>
+        <td th:text="${user.winRate} + '%'">0%</td>
+    </tr>
+    </tbody>
+
+</table> <!-- ✅ 테이블 닫기 -->
+
+<!-- ✅ 테이블 닫은 후 버튼 추가 -->
+<div style="margin-top: 2rem;">
+    <form th:action="@{/game}" method="get">
+        <button type="submit" style="
+            background-color: #4f88ff;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+        ">
+            🎮 게임으로 돌아가기
+        </button>
+    </form>
+</div>
+
+<script>
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+      location.replace('/login');
+    };
+</script>
+</body>
+</html>
