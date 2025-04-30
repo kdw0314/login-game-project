@@ -4,22 +4,22 @@ import com.example.loginproject.entity.LoginUserDetails;
 import com.example.loginproject.entity.User;
 import com.example.loginproject.repository.UserRepository;
 
-import java.time.LocalDate;
-import java.util.Random;
-
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.security.SecureRandom;
+import java.time.LocalDate;
+
 @Controller
 public class GameController {
 
     private final UserRepository userRepository;
- //   private final Random random = new Random();
     private final SecureRandom random = new SecureRandom();
+
     public GameController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -34,48 +34,63 @@ public class GameController {
     public String playGame(@RequestParam String choice,
                            @AuthenticationPrincipal LoginUserDetails loginUserDetails,
                            RedirectAttributes redirectAttributes) {
-        String[] choices = {"✌", "✊", "🖐"};
-        String computer = choices[random.nextInt(3)];
-        String result;
 
         User user = loginUserDetails.getUser();
         LocalDate today = LocalDate.now();
 
-        // 날짜가 다르면 초기화
+        // 날짜 변경 시 초기화
         if (user.getLastPlayedDate() == null || !user.getLastPlayedDate().isEqual(today)) {
             user.setTodayWins(0);
-            user.setTodayLoses(0);  // ✅ 오늘 진 것도 초기화
+            user.setTodayLoses(0);
             user.setTodayPlays(0);
             user.setLastPlayedDate(today);
         }
 
-        user.setTodayPlays(user.getTodayPlays() + 1); // (plays는 그냥 전체 게임수로 계속 올려둠)
+        user.setTodayPlays(user.getTodayPlays() + 1);
 
+        // 현재 승률 계산
+        int todayGames = user.getTodayWins() + user.getTodayLoses();
+        double winRate = (todayGames == 0) ? 0 : ((double) user.getTodayWins() / todayGames) * 100;
+
+        // 컴퓨터 선택 조작: 승률 30% 미만이면 유리하게
+        String computer;
+        if (winRate < 40) {
+            computer = switch (choice) {
+                case "✌" -> "🖐"; // 유저 승
+                case "✊" -> "✌"; // 유저 승
+                case "🖐" -> "✊"; // 유저 승
+                default -> getRandomChoice(); // 예외처리
+            };
+        } else {
+            computer = getRandomChoice();
+        }
+
+        String result;
         if (choice.equals(computer)) {
             result = "비겼습니다!";
-            // 비기면 todayWins, todayLoses 아무것도 증가 안 함
         } else if ((choice.equals("✌") && computer.equals("🖐")) ||
                 (choice.equals("✊") && computer.equals("✌")) ||
                 (choice.equals("🖐") && computer.equals("✊"))) {
             result = "이겼습니다!";
             user.setWins(user.getWins() + 1);
             user.setTodayWins(user.getTodayWins() + 1);
-            user.setLastWinDate(LocalDate.now());
+            user.setLastWinDate(today);
         } else {
             result = "졌습니다!";
-            user.setTodayLoses(user.getTodayLoses() + 1); // ✅ 졌을 때 todayLoses 증가
+            user.setTodayLoses(user.getTodayLoses() + 1);
         }
 
         userRepository.save(user);
 
+        // 결과 전달
         redirectAttributes.addFlashAttribute("choice", choice);
         redirectAttributes.addFlashAttribute("computer", computer);
         redirectAttributes.addFlashAttribute("result", result);
         redirectAttributes.addFlashAttribute("todayPlays", user.getTodayPlays());
-        // 👉 승률 계산 (비긴 건 제외)
-        int todayGames = user.getTodayWins() + user.getTodayLoses();
-        double winRate = (todayGames == 0) ? 0 : ((double) user.getTodayWins() / todayGames) * 100;
-        redirectAttributes.addFlashAttribute("winRate", String.format("%.1f%%", winRate));
+
+        int updatedGames = user.getTodayWins() + user.getTodayLoses();
+        double updatedWinRate = (updatedGames == 0) ? 0 : ((double) user.getTodayWins() / updatedGames) * 100;
+        redirectAttributes.addFlashAttribute("winRate", String.format("%.1f%%", updatedWinRate));
 
         return "redirect:/game-result";
     }
@@ -95,16 +110,17 @@ public class GameController {
         }
 
         User user = loginUserDetails.getUser();
-
-        // 👉 승률 계산 (여기도 비긴 건 제외)
         int todayGames = user.getTodayWins() + user.getTodayLoses();
         double winRate = (todayGames == 0) ? 0 : ((double) user.getTodayWins() / todayGames) * 100;
 
         model.addAttribute("winRate", String.format("%.1f%%", winRate));
         model.addAttribute("username", loginUserDetails.getUsername());
 
-        System.out.println("오늘 승률: " + winRate);
-
         return "game-result";
+    }
+
+    private String getRandomChoice() {
+        String[] choices = {"✌", "✊", "🖐"};
+        return choices[random.nextInt(3)];
     }
 }
