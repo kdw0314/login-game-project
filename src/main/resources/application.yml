@@ -6,9 +6,10 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/login_db?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://mysql-railway.internal:3306/railway?serverTimezone=Asia/Seoul&useSSL=false
     username: root
-    password: 9092Vusdlq12@
+    password: d1NhpaQcAwEkjWKbSOAFVWvmaXxVgihl
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
