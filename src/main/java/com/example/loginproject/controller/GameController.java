@@ -54,7 +54,7 @@ public class GameController {
 
         // 컴퓨터 선택 조작: 승률 30% 미만이면 유리하게
         String computer;
-        if (winRate < 40) {
+        if (winRate < 25) {
             computer = switch (choice) {
                 case "✌" -> "🖐"; // 유저 승
                 case "✊" -> "✌"; // 유저 승
